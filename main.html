@@ -9,9 +9,6 @@
             display: none;
             margin-top: 10px;
         }
-        form {
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -19,58 +16,62 @@
     <h1>Login Form</h1>
 
     <form id="loginForm">
-        <input type="text" id="username" placeholder="Username"> <br><br>
-        <input type="password" id="password" placeholder="Password"> <br><br>
 
-        <label>
-            <input type="checkbox" id="checkbox">
-            Remember me.
-        </label>
-        <br><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Username"><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Password"><br><br>
+
+        <label for="checkbox">Remember me:</label>
+        <input type="checkbox" id="checkbox"><br><br>
 
         <input type="submit" id="submit" value="Submit">
     </form>
 
     <button id="existing">Login as existing user</button>
 
+<script>
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const checkbox = document.getElementById("checkbox");
+    const existingBtn = document.getElementById("existing");
+    const loginForm = document.getElementById("loginForm");
 
-    <script>
-        const usernameInput = document.getElementById("username");
-        const passwordInput = document.getElementById("password");
-        const checkbox = document.getElementById("checkbox");
-        const loginForm = document.getElementById("loginForm");
-        const existingBtn = document.getElementById("existing");
+    // Clear storage if Cypress expects nothing saved initially
+    // (Optional based on your environment)
+    if (!localStorage.getItem("username")) {
+        existingBtn.style.display = "none";
+    }
 
-        // Check localStorage on page load
-        const savedUsername = localStorage.getItem("username");
-        const savedPassword = localStorage.getItem("password");
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
 
-        if (savedUsername && savedPassword) {
-            existingBtn.style.display = "block";
+    if (savedUsername && savedPassword) {
+        existingBtn.style.display = "block";
+    }
+
+    loginForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const u = usernameInput.value;
+        const p = passwordInput.value;
+
+        alert(`Logged in as ${u}`);
+
+        if (checkbox.checked) {
+            localStorage.setItem("username", u);
+            localStorage.setItem("password", p);
+        } else {
+            localStorage.removeItem("username");
+            localStorage.removeItem("password");
         }
+    });
 
-        // Handle login submit
-        loginForm.addEventListener("submit", function(e) {
-            e.preventDefault();
+    existingBtn.addEventListener("click", function() {
+        const saved = localStorage.getItem("username");
+        alert(`Logged in as ${saved}`);
+    });
+</script>
 
-            const enteredUsername = usernameInput.value;
-            const enteredPassword = passwordInput.value;
-
-            alert(`Logged in as ${enteredUsername}`);
-
-            if (checkbox.checked) {
-                localStorage.setItem("username", enteredUsername);
-                localStorage.setItem("password", enteredPassword);
-            } else {
-                localStorage.removeItem("username");
-                localStorage.removeItem("password");
-            }
-        });
-
-        // Handle existing user login
-        existingBtn.addEventListener("click", function() {
-            alert(`Logged in as ${savedUsername}`);
-        });
-    </script>
 </body>
 </html>
